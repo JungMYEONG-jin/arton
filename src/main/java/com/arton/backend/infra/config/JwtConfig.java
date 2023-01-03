@@ -1,5 +1,6 @@
 package com.arton.backend.infra.config;
 
+import com.arton.backend.infra.jwt.JwtAuthenticationFilter;
 import com.arton.backend.infra.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,6 +19,7 @@ public class JwtConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterCh
 
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
-//        httpSecurity.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(tokenProvider, redisTemplate);
+        httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
