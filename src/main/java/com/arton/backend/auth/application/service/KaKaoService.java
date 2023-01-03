@@ -1,7 +1,7 @@
 package com.arton.backend.auth.application.service;
 
 import com.arton.backend.auth.application.port.in.KaKaoUseCase;
-import com.arton.backend.auth.application.port.in.LoginResponseDto;
+import com.arton.backend.auth.application.port.in.TokenDto;
 import com.arton.backend.user.adapter.out.repository.UserRepository;
 import com.arton.backend.user.domain.AgeRange;
 import com.arton.backend.user.domain.Gender;
@@ -15,7 +15,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -38,7 +37,7 @@ public class KaKaoService implements KaKaoUseCase {
     private String clientId;
 
     @Override
-    public LoginResponseDto kakaoLogin(String code) {
+    public TokenDto kakaoLogin(String code) {
         return null;
     }
 

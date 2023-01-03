@@ -9,8 +9,9 @@ import lombok.*;
  */
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Builder
 @AllArgsConstructor
-public class LoginResponseDto {
+public class TokenDto {
     private String grantType;
     private String accessToken;
     private String refreshToken;
