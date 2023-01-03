@@ -3,6 +3,8 @@ package com.arton.backend.auth.application.service;
 import com.arton.backend.auth.application.port.in.KaKaoUseCase;
 import com.arton.backend.auth.application.port.in.LoginResponseDto;
 import com.arton.backend.user.adapter.out.repository.UserRepository;
+import com.arton.backend.user.domain.AgeRange;
+import com.arton.backend.user.domain.Gender;
 import com.arton.backend.user.domain.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,6 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
+import java.time.LocalDateTime;
+import java.util.Locale;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -107,9 +113,20 @@ public class KaKaoService implements KaKaoUseCase {
         if (user == null) {
             String nickName = userInfo.get("kakao_account").get("name").asText();
             String email = userInfo.get("kakao_account").get("email").asText();
+            /** YYYY */
             String birth = userInfo.get("kakao_account").get("birthyear").asText();
             String gender = userInfo.get("kakao_account").get("gender").asText();
-
+            int age = LocalDateTime.now().getYear() - Integer.parseInt(birth) + 1;
+            /** password random */
+            String password = UUID.randomUUID().toString();
+            user = User.builder().email(email)
+                    .gender(Gender.get(gender.toUpperCase(Locale.ROOT)))
+                    .password(passwordEncoder.encode(password))
+                    .kakaoId(id)
+                    .nickname(nickName)
+                    .profileImageUrl("/image/profiles/default.png")
+                    .ageRange(AgeRange.get(age)).build();
+            userRepository.save(user);
         }
         return user;
     }
