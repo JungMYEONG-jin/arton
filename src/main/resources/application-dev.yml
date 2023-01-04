@@ -1,0 +1,49 @@
+kakao:
+  client:
+    id: mj
+
+jwt:
+  secret: YXJ0b24tc2VydmVyLWp3dC10b2tlbi1zaWduLWtleS1lbHNlLWNlcnQtcDEyLWFhYWFiZGV3cmZkc2Zkc3JlZHNzZHNhCg==
+
+server:
+  port: 8080
+  tomcat:
+    max-http-form-post-size: 25MB
+  error:
+    include-stacktrace: ON_PARAM
+
+
+# ETC
+spring:
+  servlet:
+    max-file-size: 20MB
+    max-request-size: 25MB
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/mate
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+    cache:
+      type: REDIS
+
+    jpa:
+      hibernate:
+        ddl-auto: create
+
+      properties:
+        hibernate:
+          format_sql: true
+          show_Sql: true
+
+  redis:
+    host: localhost
+    port: 6379
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace
+
+default:
+  image: /image/profiles/default.png
