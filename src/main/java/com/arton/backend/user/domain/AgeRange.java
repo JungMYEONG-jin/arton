@@ -38,8 +38,7 @@ public enum AgeRange {
     }
 
     public static AgeRange get(int age){
-        int value = age/10;
-        switch (value){
+        switch (age){
             case 1:
                 return Age10_19;
             case 2:
@@ -49,7 +48,7 @@ public enum AgeRange {
             case 4:
                 return Age40_49;
             default:
-                if (value>=5)
+                if (age>=5)
                     return Age50_Above;
                 else
                     return Age0_9;

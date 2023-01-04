@@ -36,9 +36,14 @@ public class KaKaoService implements KaKaoUseCase {
 
     @Value("${kakao.client.id}")
     private String clientId;
+    @Value("${kakao.redirect.url}")
+    private String redirectURL;
 
     @Override
     public TokenDto kakaoLogin(String code) {
+        String accessToken = getAccessToken(code, redirectURL);
+        User register = register(accessToken);
+        // token 발행 필요.
         return null;
     }
 
@@ -111,12 +116,13 @@ public class KaKaoService implements KaKaoUseCase {
         long id = userInfo.get("id").asLong();
         User user = userRepository.findByKakaoId(id).orElse(null);
         if (user == null) {
-            String nickName = userInfo.get("kakao_account").get("name").asText();
+            String nickName = userInfo.get("kakao_account").get("profile").get("nickname").asText();
             String email = userInfo.get("kakao_account").get("email").asText();
-            /** YYYY */
-            String birth = userInfo.get("kakao_account").get("birthyear").asText();
+            String ageRange = userInfo.get("kakao_account").get("age_range").asText();
+            // age Range example 20~29
+            // 앞자리만 가져와서 해결하자
+            int age = Integer.parseInt(ageRange.substring(0, 1));
             String gender = userInfo.get("kakao_account").get("gender").asText();
-            int age = LocalDateTime.now().getYear() - Integer.parseInt(birth) + 1;
             /** password random */
             String password = UUID.randomUUID().toString();
             user = User.builder().email(email)
@@ -125,7 +131,8 @@ public class KaKaoService implements KaKaoUseCase {
                     .kakaoId(id)
                     .nickname(nickName)
                     .profileImageUrl("/image/profiles/default.png")
-                    .ageRange(AgeRange.get(age)).build();
+                    .ageRange(AgeRange.get(age))
+                    .build();
             userRepository.save(user);
         }
         return user;

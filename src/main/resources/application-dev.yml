@@ -1,6 +1,10 @@
 kakao:
   client:
     id: mj
+  redirect:
+    url: http://localhost:8080/auth/kakao
+  rest:
+    key: 2aad40910868e3c5fa9594f8de34a07b
 
 jwt:
   secret: YXJ0b24tc2VydmVyLWp3dC10b2tlbi1zaWduLWtleS1lbHNlLWNlcnQtcDEyLWFhYWFiZGV3cmZkc2Zkc3JlZHNzZHNhCg==
@@ -19,7 +23,7 @@ spring:
     max-file-size: 20MB
     max-request-size: 25MB
   datasource:
-    url: jdbc:h2:tcp://localhost/~/mate
+    url: jdbc:h2:tcp://localhost/~/arton
     username: sa
     password:
     driver-class-name: org.h2.Driver

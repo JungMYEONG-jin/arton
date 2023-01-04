@@ -12,37 +12,37 @@ class AgeRangeTest {
 
     @Test
     void getRangeTest() {
-        int age = 5;
+        int age = 0;
         assertThat(AgeRange.get(age).equals(AgeRange.Age0_9)).isTrue();
-        age=10;
+        age=1;
         assertThat(AgeRange.get(age).equals(AgeRange.Age10_19)).isTrue();
-        age=19;
+        age=1;
         assertThat(AgeRange.get(age).equals(AgeRange.Age10_19)).isTrue();
-        age=20;
+        age=2;
         assertThat(AgeRange.get(age).equals(AgeRange.Age20_29)).isTrue();
-        age=29;
+        age=2;
         assertThat(AgeRange.get(age).equals(AgeRange.Age20_29)).isTrue();
-        age=30;
+        age=3;
         assertThat(AgeRange.get(age).equals(AgeRange.Age30_39)).isTrue();
-        age=39;
+        age=3;
         assertThat(AgeRange.get(age).equals(AgeRange.Age30_39)).isTrue();
-        age=40;
+        age=4;
         assertThat(AgeRange.get(age).equals(AgeRange.Age40_49)).isTrue();
-        age=49;
+        age=4;
         assertThat(AgeRange.get(age).equals(AgeRange.Age40_49)).isTrue();
-        age=50;
+        age=5;
         assertThat(AgeRange.get(age).equals(AgeRange.Age50_Above)).isTrue();
-        age=51;
+        age=5;
         assertThat(AgeRange.get(age).equals(AgeRange.Age50_Above)).isTrue();
-        age=59;
+        age=5;
         assertThat(AgeRange.get(age).equals(AgeRange.Age50_Above)).isTrue();
-        age=66;
+        age=6;
         assertThat(AgeRange.get(age).equals(AgeRange.Age50_Above)).isTrue();
     }
 
     @Test
     void failTest() {
         int age = 5;
-        assertThat(AgeRange.get(age).equals(AgeRange.Age20_29)).isFalse();
+        assertThat(AgeRange.get(age).equals(AgeRange.Age50_Above)).isFalse();
     }
 }

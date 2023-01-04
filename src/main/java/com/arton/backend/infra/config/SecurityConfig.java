@@ -72,7 +72,7 @@ public class SecurityConfig {
                 .sameOrigin()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeRequests().antMatchers("/auth/signup", "/auth/login", "/auth/reissue").permitAll()
+                .authorizeRequests().antMatchers("/auth/signup", "/auth/login", "/auth/reissue", "/auth/kakao").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfig(tokenProvider, redisTemplate));
