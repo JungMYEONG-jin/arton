@@ -15,6 +15,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -29,7 +30,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Transactional
 public class KaKaoService implements KaKaoUseCase {
-//    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
 
@@ -120,7 +121,7 @@ public class KaKaoService implements KaKaoUseCase {
             String password = UUID.randomUUID().toString();
             user = User.builder().email(email)
                     .gender(Gender.get(gender.toUpperCase(Locale.ROOT)))
-//                    .password(passwordEncoder.encode(password))
+                    .password(passwordEncoder.encode(password))
                     .kakaoId(id)
                     .nickname(nickName)
                     .profileImageUrl("/image/profiles/default.png")
