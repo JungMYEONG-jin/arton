@@ -28,7 +28,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final RedisTemplate redisTemplate;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
         try {
             // get token
             String token = parseBearerToken(request);
@@ -36,6 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // 유효 검증
             if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
+                log.info("hello ");
                 // logout 여부 확인
                 String isLogout = (String)redisTemplate.opsForValue().get(token);
                 if (ObjectUtils.isEmpty(isLogout)){
@@ -45,16 +48,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception e) {
-            logger.error("Could not set member authentication in security context", e);
+            log.error("Could not set member authentication in security context", e);
         }
         filterChain.doFilter(request, response);
-    }
 
+    }
 
     private String parseBearerToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-            return bearerToken.substring(7); // "Bearer " + token
+            return bearerToken.substring(7); // apple api 예로 "Bearer " + jwt 로 보냄
         }
         return null;
     }

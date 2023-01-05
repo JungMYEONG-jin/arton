@@ -5,7 +5,6 @@ import com.arton.backend.exception.CustomException;
 import com.arton.backend.exception.ErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SecurityException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,24 +34,24 @@ public class TokenProvider {
 
     private final Key key;
 
-    public TokenProvider(@Value("${jwt.secret}") String secretKey) {
-        byte[] decode = Base64.getDecoder().decode(secretKey);
-        this.key = Keys.hmacShaKeyFor(decode);
+    public TokenProvider(@Value("${jwt.secret}") String secretKey){
+        byte[] keyBytes = Base64.getDecoder().decode(secretKey);
+        this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public TokenDto generateToken(Authentication authentication) {
+    public TokenDto generateToken(Authentication authentication){
         String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
         long now = (new Date()).getTime();
-        // expiration time
         Date exp = new Date(now + TOKEN_EXPIRE_TIME);
         Date refreshExp = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
-        // create access token
-        String accessToken = Jwts.builder().setSubject(authentication.getName())
+        // create accessToken
+        String accessToken = Jwts.builder().setSubject(authentication.getName()) // get name is id
                 .claim(AUTHORITIES_KEY, authorities)
                 .setExpiration(exp)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
         String refreshToken = Jwts.builder().setExpiration(refreshExp).signWith(key, SignatureAlgorithm.HS512).compact();
+
         return TokenDto.builder()
                 .grantType(BEARER_TYPE)
                 .accessToken(accessToken)
@@ -62,7 +61,7 @@ public class TokenProvider {
                 .build();
     }
 
-    public Authentication getAuthentication(String accessToken) {
+    public Authentication getAuthentication(String accessToken){
         // decode
         Claims claims = parseClaims(accessToken);
 
@@ -84,24 +83,19 @@ public class TokenProvider {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (SecurityException | MalformedJwtException e) {
-            log.info("Wrong JWT Signature");
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            log.info("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
-            log.info("Expired Token");
+            log.info("만료된 JWT 토큰입니다.");
         } catch (UnsupportedJwtException e) {
-            log.info("Not Supported JWT Token");
+            log.info("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
-            log.info("The Token is invalid");
+            log.info("JWT 토큰이 잘못되었습니다.");
         }
         return false;
     }
 
-    /**
-     * 토큰 만료일 체크
-     * @param accessToken
-     * @return
-     */
-    public Long getExpiration(String accessToken) {
+    public Long getExpiration(String accessToken){
         Date expiration = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody().getExpiration();
         long now = new Date().getTime();
         return expiration.getTime() - now;

@@ -1,6 +1,6 @@
 kakao:
   client:
-    id: mj
+    id: 2aad40910868e3c5fa9594f8de34a07b
   redirect:
     url: http://localhost:8080/auth/kakao
   rest:

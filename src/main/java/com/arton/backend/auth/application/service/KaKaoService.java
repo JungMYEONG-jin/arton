@@ -1,5 +1,6 @@
 package com.arton.backend.auth.application.service;
 
+import com.arton.backend.ForCompanySSL;
 import com.arton.backend.auth.application.port.in.KaKaoUseCase;
 import com.arton.backend.auth.application.port.in.TokenDto;
 import com.arton.backend.user.adapter.out.repository.UserRepository;
@@ -33,6 +34,7 @@ public class KaKaoService implements KaKaoUseCase {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
+    private final ForCompanySSL forCompanySSL;
 
     @Value("${kakao.client.id}")
     private String clientId;
@@ -41,8 +43,9 @@ public class KaKaoService implements KaKaoUseCase {
 
     @Override
     public TokenDto kakaoLogin(String code) {
-        String accessToken = getAccessToken(code, redirectURL);
-        User register = register(accessToken);
+        String accessToken = forCompanySSL.getAccessToken(clientId,redirectURL,code);
+        System.out.println("accessToken = " + accessToken);
+//        User register = register(accessToken);
         // token 발행 필요.
         return null;
     }
@@ -51,17 +54,16 @@ public class KaKaoService implements KaKaoUseCase {
      * https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api
      * 토근 받기 참조
      * @param code
-     * @param uri
      * @return
      */
-    private String getAccessToken(String code, String uri) {
+    private String getAccessToken(String code) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant-type", "authorization_code");
         body.add("client-id", clientId);
-        body.add("redirect_uri", uri);
+        body.add("redirect_uri", redirectURL);
         body.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, httpHeaders);

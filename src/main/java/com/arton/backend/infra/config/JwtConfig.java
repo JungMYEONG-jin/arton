@@ -18,7 +18,7 @@ public class JwtConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterCh
     private final RedisTemplate redisTemplate;
 
     @Override
-    public void configure(HttpSecurity httpSecurity) throws Exception {
+    public void configure(HttpSecurity httpSecurity) {
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(tokenProvider, redisTemplate);
         httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }

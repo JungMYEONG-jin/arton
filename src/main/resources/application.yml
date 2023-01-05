@@ -1,6 +1,3 @@
-kakao:
-  client:
-    id: mj
-
-jwt:
-  secret: YXJ0b24tc2VydmVyLWp3dC10b2tlbi1zaWduLWtleS1lbHNlLWNlcnQtcDEyLWFhYWFiZGV3cmZkc2Zkc3JlZHNzZHNhCg==
+spring:
+  profiles:
+    active: dev
